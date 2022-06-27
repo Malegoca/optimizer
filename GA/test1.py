@@ -10,7 +10,7 @@ from scipy.stats import chisquare, normaltest,kstest, probplot,anderson, gaussia
 # from statsmodels.graphics.gofplots import qqplot
 
 
-os.chdir('/home/src2/Maria/optimizer/data/SIGMATESTING')
+os.chdir('/home/src2/Maria/optimizer/extraData/SIGMATESTING')
 path=os.getcwd()
 tdp_file_name=[]
 #directory where data is stored
