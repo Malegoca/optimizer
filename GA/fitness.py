@@ -4,7 +4,7 @@ import numpy as np
 
 from scipy.signal import savgol_filter
 
-from scipy.stats import _
+from scipy.stats import probplot, kurtosis
 
 def moving_average(arr,window_size=int):
     i = 0
@@ -64,11 +64,43 @@ def xyz_fit(x,y,z,Time):
     zfit=zvalue+z_max_diff
 
     xyzfitness=xfit+yfit+zfit
-    print(xyzfitness)
+    # print(xyzfitness)
 
     return xyzfitness
 
 def residuals_fit(phase, TimeP, range, TimeR):
-    residual=1000
+    #phase fitness: make sure is gausian
+    _, _, rp=probplot(phase, dist="norm",fit=True, plot=None)[1]
 
-    return residual
+    if rp**2 < 0.5:
+        phasefit=-300
+    elif rp**2 < 0.98:
+        phasefit=-200
+    else:
+        phasefit=100
+
+    resultp = kurtosis(phase,fisher=True)
+    if resultp <= 0 or resultp > 3:
+        phasefit2=-400
+    else:
+        phasefit2=100
+
+    #Range fitness: make sure is gausian
+    _, _, r=probplot(range, dist="norm",fit=True, plot=None)[1]
+
+    if r**2 < 0.5:
+        rangefit=-300
+    elif r**2 < 0.98:
+        rangefit=-200
+    else:
+        rangefit=100
+
+    result = kurtosis(phase,fisher=True)
+    if result <= 0 or result > 3:
+        rangefit2=-400
+    else:
+        rangefit2=100
+
+    residualsfit=phasefit+phasefit2+rangefit+rangefit2
+
+    return residualsfit
