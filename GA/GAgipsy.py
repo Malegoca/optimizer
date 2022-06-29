@@ -1,6 +1,6 @@
 import sys
 import numpy as np
-import pygad 
+import pygad
 
 import write2tree as w
 from getdata import get_position, get_residuals
@@ -8,19 +8,20 @@ from fitness import xyz_fit,residuals_fit
 
 
 def fitness_func(solution, solution_idx):
-    
+
     global ga_instance
-    
-    print(solution_idx,solution)
+
+    # print(solution_idx,solution)
     generation = ga_instance.generations_completed
-    path='/home/src2/Maria/optimizer/data'
+    # path='/home/src2/Maria/optimizer/data'
+    path='/home/WVU-AD/jgross2/optimizer/data'
 
     #write parameters to tree and check rtgx ran succesfully
     flag = w.write2tree(solution, solution_idx, generation, path)
 
     if flag != True:
         sys.exit() #if rtgx fails stop this program
-    
+
     #Extract data
     x,y,z,Time = get_position(solution_idx, generation, path)
     phase, TimeP, range, TimeR = get_residuals(solution_idx, generation, path)
@@ -31,7 +32,7 @@ def fitness_func(solution, solution_idx):
 
     fitness=xyzfitness+residualfitness
 
-    
+
     return fitness
 
 fitness_function=fitness_func
@@ -63,22 +64,22 @@ def on_mutation(ga_instance, offspring_mutation):
 def on_stop(ga_instance, last_population_fitness):
     print("on_stop()")
 
-ga_instance = pygad.GA(num_generations=2,
-                       num_parents_mating=8,
+ga_instance = pygad.GA(num_generations=70,
+                       num_parents_mating=5,
                        fitness_func=fitness_function,
                        sol_per_pop=8,
-                       num_genes=8,
-                       parent_selection_type='rws', #or 'rank'
+                       num_genes=7,
+                       parent_selection_type='rank', #or 'rank'
                     #    keep_parents=-1,
-                    #    gene_type=[[float,2],[float,2],[float,2],[float,3],int,int,[float,2],[float,2]],
+                       # gene_type=[[float,2],[float,2],[float,2],[float,3],int,int,[float,2],[float,2]],
                        gene_space = [[*np.arange(0.05,0.3,0.0025)],    #[0.195,2.3,0.5,0.005,1000,10,0.01,1]
-                       [*np.arange(1,3.1,0.1)], 
-                       [*np.arange(0.1,1,0.05)], 
+                       [*np.arange(1,3.1,0.1)],
+                       [*np.arange(0.1,1,0.05)],
                        [*np.arange(0.001,0.1,0.001)],
                        range(5,2000,5),
                        range(1,1002,5),
-                       [*np.arange(0.01,1.01,0.01)],
                        [*np.arange(0.01,1.01,0.01)]],
+                       # [*np.arange(0.01,1.01,0.01)]],
                     #    save_best_solutions=True,
                        on_start=on_start,
                        on_fitness=on_fitness,
@@ -86,9 +87,10 @@ ga_instance = pygad.GA(num_generations=2,
                        on_crossover=on_crossover,
                        on_mutation=on_mutation,
                        on_generation=on_generation,
-                       on_stop=on_stop)
+                       on_stop=on_stop,
+                       mutation_num_genes=3)
                     #    mutation_type="adaptive",
-                    #    mutation_num_genes=(4, 1))
+
                     #    save_solutions=True)
 
 print("Initial Population")
@@ -103,7 +105,10 @@ print("Parameters of the best solution : {solution}".format(solution=solution))
 print("Fitness value of the best solution = {solution_fitness}".format(solution_fitness=solution_fitness))
 print("Index of the best solution : {solution_idx}".format(solution_idx=solution_idx))
 
+print("Final Population")
+print(ga_instance.population)
+
 ga_instance.plot_fitness()
 # Saving the GA instance.
-filename = 'Test_1' 
+filename = 'Test_1'
 ga_instance.save(filename=filename)
