@@ -4,7 +4,7 @@ import numpy as np
 
 from scipy.signal import savgol_filter
 
-from scipy.stats import _
+from scipy.stats import probplot
 
 def moving_average(arr,window_size=int):
     i = 0
@@ -13,11 +13,11 @@ def moving_average(arr,window_size=int):
     # Initialize an empty list to store moving average
     moving_averages = []
     while i < len(arr1) - window_size + 1:
-        
+
         # Calculate the average of current window
         window_average = round(np.sum(arr1[
         i:i+window_size]) / window_size, 2)
- 
+
         # Store the average of current
         # window in moving average list
         moving_averages.append(window_average)
@@ -35,9 +35,9 @@ def count_ma(max,arr,treshold):
     treshold=max-max*treshold
     count=sum(i > treshold for i in arr)
     return count
-    
+
 def smooth(time,arr):
-    window=round(len(time)*0.05) #window is 5% the lenght of the data
+    window=833 #round(len(time)*0.025) #window is 5% the lenght of the data
     arr_hat = savgol_filter(arr,window, 3)
     max_diff=(-1)*np.amax(np.abs(arr-arr_hat))
     return max_diff, arr_hat
@@ -47,7 +47,7 @@ def xyz_fit(x,y,z,Time):
     # x,y,z,Time=get_position(solution_idx=1,generation=1,path=path)
 
     ################ Moving average #######################
-    window_size = 4 
+    window_size = 4
     xvalue, xmoving_averages = moving_average(x,window_size)
     yvalue, xmoving_averages = moving_average(y,window_size)
     zvalue, xmoving_averages = moving_average(z,window_size)
@@ -64,7 +64,7 @@ def xyz_fit(x,y,z,Time):
     zfit=zvalue+z_max_diff
 
     xyzfitness=xfit+yfit+zfit
-    print(xyzfitness)
+    # print(xyzfitness)
 
     return xyzfitness
 
