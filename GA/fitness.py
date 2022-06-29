@@ -4,7 +4,7 @@ import numpy as np
 
 from scipy.signal import savgol_filter
 
-from scipy.stats import probplot
+from scipy.stats import probplot, kurtosis
 
 def moving_average(arr,window_size=int):
     i = 0
@@ -13,11 +13,11 @@ def moving_average(arr,window_size=int):
     # Initialize an empty list to store moving average
     moving_averages = []
     while i < len(arr1) - window_size + 1:
-
+        
         # Calculate the average of current window
         window_average = round(np.sum(arr1[
         i:i+window_size]) / window_size, 2)
-
+ 
         # Store the average of current
         # window in moving average list
         moving_averages.append(window_average)
@@ -35,9 +35,9 @@ def count_ma(max,arr,treshold):
     treshold=max-max*treshold
     count=sum(i > treshold for i in arr)
     return count
-
+    
 def smooth(time,arr):
-    window=833 #round(len(time)*0.025) #window is 5% the lenght of the data
+    window=round(len(time)*0.05) #window is 5% the lenght of the data
     arr_hat = savgol_filter(arr,window, 3)
     max_diff=(-1)*np.amax(np.abs(arr-arr_hat))
     return max_diff, arr_hat
@@ -47,7 +47,7 @@ def xyz_fit(x,y,z,Time):
     # x,y,z,Time=get_position(solution_idx=1,generation=1,path=path)
 
     ################ Moving average #######################
-    window_size = 4
+    window_size = 4 
     xvalue, xmoving_averages = moving_average(x,window_size)
     yvalue, xmoving_averages = moving_average(y,window_size)
     zvalue, xmoving_averages = moving_average(z,window_size)
@@ -69,6 +69,38 @@ def xyz_fit(x,y,z,Time):
     return xyzfitness
 
 def residuals_fit(phase, TimeP, range, TimeR):
-    residual=1000
+    #phase fitness: make sure is gausian
+    _, _, rp=probplot(phase, dist="norm",fit=True, plot=None)[1]
 
-    return residual
+    if rp**2 < 0.5:
+        phasefit=-300
+    elif rp**2 < 0.98:
+        phasefit=-200
+    else:
+        phasefit=100
+
+    resultp = kurtosis(phase,fisher=True)
+    if resultp <= 0 or resultp > 3:
+        phasefit2=-400
+    else:
+        phasefit2=100
+
+    #Range fitness: make sure is gausian
+    _, _, r=probplot(range, dist="norm",fit=True, plot=None)[1]
+
+    if r**2 < 0.5:
+        rangefit=-300
+    elif r**2 < 0.98:
+        rangefit=-200
+    else:
+        rangefit=100
+
+    result = kurtosis(phase,fisher=True)
+    if result <= 0 or result > 3:
+        rangefit2=-400
+    else:
+        rangefit2=100
+
+    residualsfit=phasefit+phasefit2+rangefit+rangefit2
+
+    return residualsfit
