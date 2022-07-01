@@ -5,12 +5,15 @@ import numpy as np
 
 
 
-def get_position(solution_idx,generation,path):
+def get_position(solution_idx=None,generation=None,path=str):
     # Define paths for data
 
     # path='/home/src2/Maria/optimizer/data'
-    path2gen=os.path.join(path,str(generation))
-    path2ind=os.path.join(path2gen,str(solution_idx))
+    if solution_idx and generation != None:
+        path2gen=os.path.join(path,str(generation))
+        path2ind=os.path.join(path2gen,str(solution_idx))
+    else:
+        path2ind=path
 
     #define variables
     Time=[]
@@ -53,11 +56,13 @@ def get_position(solution_idx,generation,path):
 
     return Xr,Yr,Zr,Time
 
-def get_residuals(solution_idx,generation,path):
+def get_residuals(solution_idx=None,generation=None,path=str):
     # path='/home/src2/Maria/optimizer/data'
-    path2gen=os.path.join(path,str(generation))
-    path2ind=os.path.join(path2gen,str(solution_idx))
-
+    if solution_idx and generation != None:
+        path2gen=os.path.join(path,str(generation))
+        path2ind=os.path.join(path2gen,str(solution_idx))
+    else:
+        path2ind=path
     #define variables
     TimeP=[]
     TimeR=[]
@@ -66,7 +71,7 @@ def get_residuals(solution_idx,generation,path):
     
     #file names to get data from
     out_file_name='finalResiduals.out'
-
+    # out_file_name='postfitResiduals.out'
     #directory where data is stored
     residfile=os.path.join(path2ind,out_file_name)
     with open(residfile,'r') as out:
