@@ -4,9 +4,9 @@ import numpy as np
 from bayes_opt import BayesianOptimization
 from bayes_opt.util import UtilityFunction, Colours
 
-import write2tree2 as w
-from GA.getdata import get_position, get_residuals
-from GA.fitness import xyz_fit,residuals_fit
+from tools import write2tree2 as w
+from tools.getdata import get_position, get_residuals
+from tools.fitness import xyz_fit,residuals_fit
 
 
 def black_box_function(wetz,dryz,Iu,Uu,PIu,PUu,Psigma):

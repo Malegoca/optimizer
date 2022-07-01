@@ -5,12 +5,15 @@ import matplotlib
 import matplotlib.pyplot as plt
 import pylab
 from scipy.signal import savgol_filter
-from scipy.stats import chisquare, normaltest,kstest, probplot,anderson, gaussian_kde
+from scipy.stats import kurtosis, normaltest,kstest, probplot,jarque_bera, gaussian_kde
+from sklearn.linear_model import LinearRegression
+import seaborn as sns
 # from scipy import qqplot
 # from statsmodels.graphics.gofplots import qqplot
 
 
-os.chdir('/home/src2/Maria/optimizer/extraData/SIGMATESTING')
+# os.chdir('/home/src2/Maria/optimizer/extraData/SIGMATESTING')
+os.chdir('/home/src2/Maria/testingGA')
 path=os.getcwd()
 tdp_file_name=[]
 #directory where data is stored
@@ -65,25 +68,26 @@ for i, file in enumerate(tdp_file_name):
         RANGE.append(range)
 
 # print(PHASE)
-for i, data in enumerate(PHASE):
-    statistic =anderson(data, dist='norm')
-    print(statistic)
-    # print(np.mean(data),np.std(data))
-    # slope, intercept, r=probplot(data, dist="norm",fit=True, plot=pylab)[1]
-    # print(r**2)
-    # # probplot(data, dist="norm", plot=pylab)
-    # pylab.show()
-    plt.hist(data, density=True, bins=200, label='Residuals')
-    mn, mx = plt.xlim()
-    plt.xlim(mn, mx)
-    kde_xs = np.linspace(mn, mx, 300)
-    kde = gaussian_kde(data)
-    plt.plot(kde_xs, kde.pdf(kde_xs), label="PDF")
-    plt.legend(loc="upper left")
-    plt.ylabel("Probability")
-    plt.xlabel("Data")
-    plt.title("Histogram")
-    plt.show()
+# for i, data in enumerate(PHASE):
+#     statistic =anderson(data, dist='norm')
+#     # print(statistic)
+    
+#     slope, intercept, r=probplot(data, dist="norm",fit=True, plot=None)[1]
+#     # print(r**2)
+#     print(r**2,slope, intercept,np.var(data))
+#     # probplot(data, dist="norm", plot=pylab)
+#     # pylab.show()
+#     plt.hist(data, density=True, bins=200, label='Residuals')
+#     mn, mx = plt.xlim()
+#     plt.xlim(mn, mx)
+#     kde_xs = np.linspace(mn, mx, 300)
+#     kde = gaussian_kde(data)
+#     plt.plot(kde_xs, kde.pdf(kde_xs), label="PDF")
+#     plt.legend(loc="upper left")
+#     plt.ylabel("Probability")
+#     plt.xlabel("Data")
+#     plt.title("Histogram")
+#     plt.show()
     
 # fig1, axs = plt.subplots(2,sharex=True)
 # fig1.suptitle('Motion in ECEF')
@@ -106,3 +110,28 @@ for i, data in enumerate(PHASE):
 
 # plt.xlabel('Time (hours since start)')
 # plt.show()
+
+
+
+for i, data in enumerate(PHASE):
+    data_norm = np.random.normal(np.mean(data), np.std(data), len(data))
+    values, base = np.histogram(data)
+    values_norm, base_norm = np.histogram(data_norm)
+    cumulative = np.cumsum(values)
+    cumulative_norm = np.cumsum(values_norm)
+
+    result = kurtosis(data,fisher=True)
+    print(result)
+    # result=jarque_bera(data)
+    # print(f"K-S statistic: {result[0]}")
+    # print(f"p-value: {result[1]}")
+    plt.hist(data, density=True, bins=200, label='Residuals')
+    plt.show()
+    sns.ecdfplot(data, c='blue')
+    sns.ecdfplot(data_norm, c='green')
+    # print('mean',np.mean(data),'median',np.median(data))
+    # plt.plot(base[:-1], cumulative, c='blue')
+    # plt.plot(base_norm[:-1], cumulative_norm, c='green')
+    plt.show()
+    # result=jarque_bera(data)
+    # print(result)

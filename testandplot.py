@@ -6,6 +6,8 @@ import matplotlib
 import matplotlib.pyplot as plt
 from scipy.signal import savgol_filter
 from scipy import stats as st
+from tools.fitness import xyz_fit
+from tools.getdata import get_position
 
 def moving_average(arr,window_size=int):
     i = 0
@@ -38,7 +40,8 @@ def count_ma(max,arr,treshold):
     return count
 
 
-os.chdir('/home/src2/Maria/optimizer/data/SIGMATESTING')
+# os.chdir('/home/src2/Maria/optimizer/data/SIGMATESTING')
+os.chdir('/home/src2/Maria/testingGA')
 path=os.getcwd()
 tdp_file_name=[]
 #directory where data is stored
@@ -115,14 +118,14 @@ for i, file in enumerate(tdp_file_name):
     
 for j in range(len(tdp_file_name)):  
     diff=[]
-    yhat = savgol_filter(z[j],1800, 3)
+    yhat = savgol_filter(x[j],1800, 3)
     # print(len(yhat))
-    diff=np.abs(yhat-z[j])
+    diff=np.abs(yhat-x[j])
     max=np.amax(diff)
     plt.plot(diff)
     plt.show()
     print(j,np.sum(diff),max)
-    plt.plot(TIME[0],z[j],'g')
+    plt.plot(TIME[0],x[j],'g')
     plt.plot(TIME[0],yhat,'r')
     plt.show()
 
