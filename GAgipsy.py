@@ -2,9 +2,9 @@ import sys
 import numpy as np
 import pygad
 
-import write2tree as w
-from getdata import get_position, get_residuals
-from fitness import xyz_fit,residuals_fit
+import tools.write2tree as w
+from tools.getdata import get_position, get_residuals
+from tools.fitness import xyz_fit,residuals_fit
 
 
 def fitness_func(solution, solution_idx):
@@ -23,7 +23,7 @@ def fitness_func(solution, solution_idx):
         sys.exit() #if rtgx fails stop this program
 
     #Extract data
-    x,y,z,Time = get_position(solution_idx, generation, path)
+    x,y,z,Time = get_position(solution_idx=solution_idx, generation=generation, path=path)
     phase, TimeP, range, TimeR = get_residuals(solution_idx, generation, path)
 
     #Get fitness from this data
@@ -67,13 +67,13 @@ def on_stop(ga_instance, last_population_fitness):
 ga_instance = pygad.GA(num_generations=70,
                        num_parents_mating=5,
                        fitness_func=fitness_function,
-                       sol_per_pop=8,
+                       sol_per_pop=15,
                        num_genes=7,
-                       parent_selection_type='rank', #or 'rank'
+                       parent_selection_type='rws', #or 'rank'
                     #    keep_parents=-1,
                        # gene_type=[[float,2],[float,2],[float,2],[float,3],int,int,[float,2],[float,2]],
-                       gene_space = [[*np.arange(0.05,0.3,0.0025)],    #[0.195,2.3,0.5,0.005,1000,10,0.01,1]
-                       [*np.arange(1,3.1,0.1)],
+                       gene_space = [[*np.arange(0.1,0.2,0.005)],    #[0.195,2.3,0.5,0.005,1000,10,0.01,1]
+                       [*np.arange(1.5,3,0.1)],
                        [*np.arange(0.1,1,0.05)],
                        [*np.arange(0.001,0.1,0.001)],
                        range(5,2000,5),
@@ -88,8 +88,9 @@ ga_instance = pygad.GA(num_generations=70,
                        on_mutation=on_mutation,
                        on_generation=on_generation,
                        on_stop=on_stop,
-                       mutation_num_genes=3)
-                    #    mutation_type="adaptive",
+                       mutation_probability=0.3,
+                       crossover_type="single_point",
+                       crossover_probability=0.4)
 
                     #    save_solutions=True)
 
@@ -110,5 +111,5 @@ print(ga_instance.population)
 
 ga_instance.plot_fitness()
 # Saving the GA instance.
-filename = 'Test_1'
+filename = 'Test_5'
 ga_instance.save(filename=filename)
