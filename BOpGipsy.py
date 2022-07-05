@@ -30,7 +30,7 @@ def black_box_function(wetz,dryz,Iu,Uu,PIu,PUu,Psigma):
 
     return fitness
 # wetz,dryz,Iu,Uu,PIu,PUu,Psigma
-pbounds = {'wetz': (0.05, 0.25), 'dryz': (1, 3),'Iu':(0.1,1),'Uu': (0.001,1),'PIu':(5,2000),'PUu':(1,1000),'Psigma':(0.01,1)}
+pbounds = {'wetz': (0.1, 0.25), 'dryz': (1.5, 2.5),'Iu':(0.1,1),'Uu': (0.001,0.1),'PIu':(5,2000),'PUu':(1,1000),'Psigma':(0.01,1)}
 
 optimizer = BayesianOptimization(
     f=black_box_function,

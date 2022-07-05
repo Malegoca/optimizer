@@ -15,7 +15,7 @@ def write2tree(params,path):
     # path2template=os.path.join(path,'template')
 
     isexist=os.path.exists(path2run)
-    
+
 
     #create directories if they don't exist
     if not isexist:
