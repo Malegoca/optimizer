@@ -72,13 +72,13 @@ ga_instance = pygad.GA(num_generations=70,
                        parent_selection_type='rws', #or 'rank'
                     #    keep_parents=-1,
                        # gene_type=[[float,2],[float,2],[float,2],[float,3],int,int,[float,2],[float,2]],
-                       gene_space = [[*np.arange(0.1,0.2,0.005)],    #[0.195,2.3,0.5,0.005,1000,10,0.01,1]
-                       [*np.arange(1.5,3,0.1)],
+                       gene_space = [[*np.arange(1.5,3,0.1)],
+                       [*np.arange(0.1,0.2,0.005)],    #[0.195,2.3,0.5,0.005,1000,10,0.01,1]
                        [*np.arange(0.1,1,0.05)],
                        [*np.arange(0.001,0.1,0.001)],
                        range(5,2000,5),
                        range(1,1002,5),
-                       [*np.arange(0.01,1.01,0.01)]],
+                       [*np.arange(0.01,0.4,0.01)]],
                        # [*np.arange(0.01,1.01,0.01)]],
                     #    save_best_solutions=True,
                        on_start=on_start,
