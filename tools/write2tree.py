@@ -56,7 +56,7 @@ def write2tree(solutions,solution_idx,generation,path):
                     TUU=str(solutions[3])
                     next_line=next(Template)
                     x = next_line.find('j')
-                    y = next_line.find('3')
+                    y = next_line.find('$')
                     change = next_line.replace(next_line[x+2:y-1], TIU + ' ' + TUU)
                     line=change
                     # print(line)
@@ -115,7 +115,7 @@ def write2tree(solutions,solution_idx,generation,path):
     # call rtgx and wait till its done
     rtgx=subprocess.call(['rtgx', 'Trees/ppp_0.tree'], cwd=path2ind,stdout=subprocess.DEVNULL)
     # rtgx = subprocess.call('./test.py', cwd=path2ind)
-
+    # print(rtgx)
     #delete iterRTGx folder to save space
     iterfolder='iterRtgx'
     path2folder=os.path.join(path2ind,iterfolder)

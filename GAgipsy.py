@@ -64,21 +64,22 @@ def on_mutation(ga_instance, offspring_mutation):
 def on_stop(ga_instance, last_population_fitness):
     print("on_stop()")
 
-ga_instance = pygad.GA(num_generations=70,
+ga_instance = pygad.GA(num_generations=50,
                        num_parents_mating=5,
                        fitness_func=fitness_function,
                        sol_per_pop=15,
                        num_genes=7,
-                       parent_selection_type='rws', #or 'rank'
+                       parent_selection_type='tournament', #or 'rank'
+                       K_tournament=4,
                     #    keep_parents=-1,
                        # gene_type=[[float,2],[float,2],[float,2],[float,3],int,int,[float,2],[float,2]],
                        gene_space = [[*np.arange(1.5,3,0.1)],
-                       [*np.arange(0.1,0.2,0.005)],    #[0.195,2.3,0.5,0.005,1000,10,0.01,1]
-                       [*np.arange(0.1,1,0.05)],
-                       [*np.arange(0.001,0.1,0.001)],
+                       [*np.round(np.arange(0.1,0.2,0.005),3)],    #[0.195,2.3,0.5,0.005,1000,10,0.01,1]
+                       [*np.round(np.arange(0.1,1,0.1),2)],
+                       [*np.round(np.arange(0.01,0.2,0.01),3)],
                        range(5,2000,5),
-                       range(1,1002,5),
-                       [*np.arange(0.01,0.4,0.01)]],
+                       range(1,600,2),
+                       [*np.round(np.arange(0.01,0.4,0.01),2)]],
                        # [*np.arange(0.01,1.01,0.01)]],
                     #    save_best_solutions=True,
                        on_start=on_start,
@@ -90,7 +91,7 @@ ga_instance = pygad.GA(num_generations=70,
                        on_stop=on_stop,
                        mutation_probability=0.3,
                        crossover_type="single_point",
-                       crossover_probability=0.4)
+                       crossover_probability=0.7)
 
                     #    save_solutions=True)
 
@@ -111,5 +112,5 @@ print(ga_instance.population)
 
 ga_instance.plot_fitness()
 # Saving the GA instance.
-filename = 'Test_5'
+filename = 'tournament_crossp'
 ga_instance.save(filename=filename)

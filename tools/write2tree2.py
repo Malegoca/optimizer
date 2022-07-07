@@ -6,7 +6,7 @@ import subprocess
 
 
 def write2tree(params,path):
-
+    print(params)
     #set directory to store folders for runs
     # path2gen=os.path.join(path,str(generation))
     # path2ind=os.path.join(path2gen,str(solution_idx))
@@ -56,7 +56,7 @@ def write2tree(params,path):
                     TUU=str(params[3])
                     next_line=next(Template)
                     x = next_line.find('j')
-                    y = next_line.find('3')
+                    y = next_line.find('$')
                     change = next_line.replace(next_line[x+2:y-1], TIU + ' ' + TUU)
                     line=change
                     # print(line)
