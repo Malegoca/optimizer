@@ -37,12 +37,17 @@ def count_ma(max,arr,treshold):
     return count
 
 def smooth(time,arr):
-    # window=round(len(time)*0.05) #window is 5% the lenght of the data
-    window=833 #need to be odd value
+    window=round(len(time)*0.03) #window is 5% the lenght of the data
+    if (window % 2)==0:
+        window=window+1
+    else:
+        window=window
     arr_hat = savgol_filter(arr,window, 3)
     max_diff=(-1)*np.amax(np.abs(arr-arr_hat))
     return max_diff, arr_hat
-
+def errors(x,y,z):
+    
+    return
 
 def xyz_fit(x,y,z,Time):
     # x,y,z,Time=get_position(solution_idx=1,generation=1,path=path)
@@ -52,12 +57,14 @@ def xyz_fit(x,y,z,Time):
     xvalue, xmoving_averages = moving_average(x,window_size)
     yvalue, xmoving_averages = moving_average(y,window_size)
     zvalue, xmoving_averages = moving_average(z,window_size)
+    
     # count=count_ma(value,moving_averages,0.1)
 
     ##### smoothing spline to detect jumps and spikes #####
     x_max_diff, _ = smooth(Time,x)
     y_max_diff, _ = smooth(Time,y)
     z_max_diff, _ = smooth(Time,z)
+    
 
     ######### compute fitness #######
     xfit=xvalue+x_max_diff
@@ -65,7 +72,7 @@ def xyz_fit(x,y,z,Time):
     zfit=zvalue+z_max_diff
 
     xyzfitness=xfit+yfit+zfit
-    # print(xyzfitness)
+    print('fitness: ',xyzfitness)
 
     return xyzfitness
 
@@ -96,7 +103,7 @@ def residuals_fit(phase, TimeP, range, TimeR):
     else:
         rangefit=100
 
-    result = kurtosis(phase,fisher=True)
+    result = kurtosis(range,fisher=True)
     if result <= 0 or result > 3:
         rangefit2=-400
     else:
