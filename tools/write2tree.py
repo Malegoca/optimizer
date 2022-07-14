@@ -11,7 +11,7 @@ def write2tree(solutions,solution_idx,generation,path):
     path2gen=os.path.join(path,str(generation))
     path2ind=os.path.join(path2gen,str(solution_idx))
     path2template=os.path.join(path,'SOLO_GPS')
-    # path2template=os.path.join(path,'template')
+    # path2template=os.path.join(path,'PIKSI1')
 
     isexistG=os.path.exists(path2gen)
     isexistI=os.path.exists(path2ind)
